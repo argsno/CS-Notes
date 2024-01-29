@@ -30,23 +30,25 @@
 
 #### 1. Set
 
-- TreeSet：基于红黑树实现，支持有序性操作，例如根据一个范围查找元素的操作。但是查找效率不如 HashSet，HashSet 查找的时间复杂度为 O(1)，TreeSet 则为 O(logN)。
+- TreeSet：<mark class="hltr-pink">基于红黑树实现</mark>，支持有序性操作，例如根据一个范围查找元素的操作。但是查找效率不如 HashSet，HashSet 查找的时间复杂度为 O(1)，TreeSet 则为 O(logN)。实现了`NavigableMap<K,V>`接口。
 
-- HashSet：基于哈希表实现，支持快速查找，但不支持有序性操作。并且失去了元素的插入顺序信息，也就是说使用 Iterator 遍历 HashSet 得到的结果是不确定的。
+- HashSet：<mark class="hltr-pink">基于哈希表实现</mark>，支持快速查找，但不支持有序性操作。并且失去了元素的插入顺序信息，也就是说使用 Iterator 遍历 HashSet 得到的结果是不确定的。实现了`Map<K,V>`接口。
 
-- LinkedHashSet：具有 HashSet 的查找效率，并且内部使用双向链表维护元素的插入顺序。
+- LinkedHashSet：具有 HashSet 的查找效率，并且<mark class="hltr-pink">内部使用双向链表维护元素的插入顺序</mark>。继承了`HashMap<K, V>`并且实现了`SequencedMap<K,V>`接口。
 
 #### 2. List
 
-- ArrayList：基于动态数组实现，支持随机访问。
+- ArrayList：<mark class="hltr-pink">基于动态数组实现</mark>，支持随机访问。
 
 - Vector：和 ArrayList 类似，但它是线程安全的。
 
-- LinkedList：基于双向链表实现，只能顺序访问，但是可以快速地在链表中间插入和删除元素。不仅如此，LinkedList 还可以用作栈、队列和双向队列。
+- LinkedList：<mark class="hltr-pink">基于双向链表实现</mark>，只能顺序访问，但是可以快速地在链表中间插入和删除元素。不仅如此，LinkedList 还<mark class="hltr-pink">可以用作栈、队列和双向队列</mark>。
 
 #### 3. Queue
 
 - LinkedList：可以用它来实现双向队列。
+
+- ArrayDeque: 动态数组实现的双向队列。
 
 - PriorityQueue：基于堆结构实现，可以用它来实现优先队列。
 
@@ -58,7 +60,7 @@
 
 - HashMap：基于哈希表实现。
 
-- HashTable：和 HashMap 类似，但它是线程安全的，这意味着同一时刻多个线程同时写入 HashTable 不会导致数据不一致。它是遗留类，不应该去使用它，而是使用 ConcurrentHashMap 来支持线程安全，ConcurrentHashMap 的效率会更高，因为 ConcurrentHashMap 引入了分段锁。
+- HashTable：和 HashMap 类似，但它是线程安全的，这意味着同一时刻多个线程同时写入 HashTable 不会导致数据不一致。它是遗留类，不应该去使用它，而是使用 ConcurrentHashMap 来支持线程安全，ConcurrentHashMap 的效率会更高，因为 ConcurrentHashMap 引入了<mark class="hltr-pink">分段锁</mark>。
 
 - LinkedHashMap：使用双向链表来维护元素的顺序，顺序为插入顺序或者最近最少使用（LRU）顺序。
 
@@ -69,7 +71,7 @@
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191208225301973.png"/> </div><br>
 
-Collection 继承了 Iterable 接口，其中的 iterator() 方法能够产生一个 Iterator 对象，通过这个对象就可以迭代遍历 Collection 中的元素。
+Collection 继承了 <mark class="hltr-pink">Iterable 接口</mark>，其中的 iterator() 方法能够产生一个 Iterator 对象，通过这个对象就可以迭代遍历 Collection 中的元素。
 
 从 JDK 1.5 之后可以使用 foreach 方法来遍历实现了 Iterable 接口的聚合对象。
 
@@ -84,14 +86,14 @@ for (String item : list) {
 
 ### 适配器模式
 
-java.util.Arrays#asList() 可以把数组类型转换为 List 类型。
+<mark class="hltr-pink">java.util.Arrays#asList() 可以把数组类型转换为 List 类型。</mark>
 
 ```java
 @SafeVarargs
 public static <T> List<T> asList(T... a)
 ```
 
-应该注意的是 asList() 的参数为泛型的变长参数，不能使用基本类型数组作为参数，只能使用相应的包装类型数组。
+<mark class="hltr-pink">应该注意的是 asList() 的参数为泛型的变长参数，不能使用基本类型数组作为参数，只能使用相应的包装类型数组。</mark>
 
 ```java
 Integer[] arr = {1, 2, 3};
@@ -115,7 +117,7 @@ List list = Arrays.asList(1, 2, 3);
 
 #### 1. 概览
 
-因为 ArrayList 是基于数组实现的，所以支持快速随机访问。RandomAccess 接口标识着该类支持快速随机访问。
+因为 ArrayList 是基于数组实现的，所以支持快速随机访问。<mark class="hltr-pink">RandomAccess 接口标识着该类支持快速随机访问。</mark>
 
 ```java
 public class ArrayList<E> extends AbstractList<E>
@@ -132,7 +134,7 @@ private static final int DEFAULT_CAPACITY = 10;
 
 #### 2. 扩容
 
-添加元素时使用 ensureCapacityInternal() 方法来保证容量足够，如果不够时，需要使用 grow() 方法进行扩容，新容量的大小为 `oldCapacity + (oldCapacity >> 1)`，即 oldCapacity+oldCapacity/2。其中 oldCapacity >> 1 需要取整，所以新容量大约是旧容量的 1.5 倍左右。（oldCapacity 为偶数就是 1.5 倍，为奇数就是 1.5 倍-0.5）
+添加元素时使用 ensureCapacityInternal() 方法来保证容量足够，如果不够时，需要使用 grow() 方法进行扩容，新容量的大小为 `oldCapacity + (oldCapacity >> 1)`，即 oldCapacity+oldCapacity/2。其中 oldCapacity >> 1 需要取整，所以<mark class="hltr-pink">新容量大约是旧容量的 1.5 倍左右</mark>。（oldCapacity 为偶数就是 1.5 倍，为奇数就是 1.5 倍-0.5）
 
 扩容操作需要调用 `Arrays.copyOf()` 把原数组整个复制到新数组中，这个操作代价很高，因此最好在创建 ArrayList 对象时就指定大概的容量大小，减少扩容操作的次数。
 
@@ -254,7 +256,7 @@ oos.writeObject(list);
 
 #### 5. Fail-Fast
 
-modCount 用来记录 ArrayList 结构发生变化的次数。结构发生变化是指添加或者删除至少一个元素的所有操作，或者是调整内部数组的大小，仅仅只是设置元素的值不算结构发生变化。
+modCount 用来记录 ArrayList 结构发生变化的次数。<mark class="hltr-pink">结构发生变化是指添加或者删除至少一个元素的所有操作，或者是调整内部数组的大小，仅仅只是设置元素的值不算结构发生变化。</mark>
 
 在进行序列化或者迭代等操作时，需要比较操作前后 modCount 是否改变，如果改变了需要抛出 ConcurrentModificationException。代码参考上节序列化中的 writeObject() 方法。
 
@@ -382,7 +384,7 @@ private E get(Object[] a, int index) {
 
 #### 2. 适用场景
 
-CopyOnWriteArrayList 在写操作的同时允许读操作，大大提高了读操作的性能，因此很适合读多写少的应用场景。
+CopyOnWriteArrayList 在写操作的同时允许读操作，大大提高了读操作的性能，因此很<mark class="hltr-pink">适合读多写少的应用场景</mark>。
 
 但是 CopyOnWriteArrayList 有其缺陷：
 
@@ -427,7 +429,7 @@ ArrayList 基于动态数组实现，LinkedList 基于双向链表实现。Array
 
 #### 1. 存储结构
 
-内部包含了一个 Entry 类型的数组 table。Entry 存储着键值对。它包含了四个字段，从 next 字段我们可以看出 Entry 是一个链表。即数组中的每个位置被当成一个桶，一个桶存放一个链表。HashMap 使用拉链法来解决冲突，同一个链表中存放哈希值和散列桶取模运算结果相同的 Entry。
+<mark class="hltr-pink">内部包含了一个 Entry 类型的数组 table。</mark>Entry 存储着键值对。它包含了四个字段，从 next 字段我们可以看出 Entry 是一个链表。即数组中的每个位置被当成一个桶，一个桶存放一个链表。HashMap <mark class="hltr-pink">使用拉链法来解决冲突</mark>，同一个链表中存放哈希值和散列桶取模运算结果相同的 Entry。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/image-20191208234948205.png"/> </div><br>
 
@@ -498,11 +500,11 @@ map.put("K3", "V3");
 ```
 
 - 新建一个 HashMap，默认大小为 16；
-- 插入 &lt;K1,V1\> 键值对，先计算 K1 的 hashCode 为 115，使用除留余数法得到所在的桶下标 115%16=3。
-- 插入 &lt;K2,V2\> 键值对，先计算 K2 的 hashCode 为 118，使用除留余数法得到所在的桶下标 118%16=6。
-- 插入 &lt;K3,V3\> 键值对，先计算 K3 的 hashCode 为 118，使用除留余数法得到所在的桶下标 118%16=6，插在 &lt;K2,V2\> 前面。
+- 插入 <K1,V1\> 键值对，先计算 K1 的 hashCode 为 115，使用除留余数法得到所在的桶下标 115%16=3。
+- 插入 <K2,V2\> 键值对，先计算 K2 的 hashCode 为 118，使用除留余数法得到所在的桶下标 118%16=6。
+- 插入 <K3,V3\> 键值对，先计算 K3 的 hashCode 为 118，使用除留余数法得到所在的桶下标 118%16=6，插在 <K2,V2\> 前面。
 
-应该注意到链表的插入是以头插法方式进行的，例如上面的 &lt;K3,V3\> 不是插在 &lt;K2,V2\> 后面，而是插入在链表头部。
+应该注意到<mark class="hltr-pink">链表的插入是以头插法方式进行</mark>的，例如上面的 <K3,V3\> 不是插在 <K2,V2\> 后面，而是插入在链表头部。
 
 查找需要分成两步进行：
 
@@ -542,7 +544,7 @@ public V put(K key, V value) {
 }
 ```
 
-HashMap 允许插入键为 null 的键值对。但是因为无法调用 null 的 hashCode() 方法，也就无法确定该键值对的桶下标，只能通过强制指定一个桶下标来存放。HashMap 使用第 0 个桶存放键为 null 的键值对。
+<mark class="hltr-pink">HashMap 允许插入键为 null 的键值对。</mark>但是因为无法调用 null 的 hashCode() 方法，也就无法确定该键值对的桶下标，只能通过强制指定一个桶下标来存放。HashMap 使用第 0 个桶存放键为 null 的键值对。
 
 ```java
 private V putForNullKey(V value) {
@@ -669,7 +671,7 @@ static int indexFor(int h, int length) {
 
 | 参数 | 含义 |
 | :--: | :-- |
-| capacity | table 的容量大小，默认为 16。需要注意的是 capacity 必须保证为 2 的 n 次方。|
+| capacity | table 的容量大小，默认为 16。需要注意的是 <mark class="hltr-pink">capacity 必须保证为 2 的 n 次方</mark>。 |
 | size | 键值对数量。 |
 | threshold | size 的临界值，当 size 大于等于 threshold 就必须进行扩容操作。 |
 | loadFactor | 装载因子，table 能够使用的比例，threshold = (int)(capacity* loadFactor)。 |
@@ -789,7 +791,7 @@ static final int tableSizeFor(int cap) {
 
 #### 8. 链表转红黑树
 
-从 JDK 1.8 开始，一个桶存储的链表长度大于等于 8 时会将链表转换为红黑树。
+<mark class="hltr-pink">从 JDK 1.8 开始，一个桶存储的链表长度大于等于 8 时会将链表转换为红黑树。</mark>
 
 #### 9. 与 Hashtable 的比较
 
@@ -813,9 +815,9 @@ static final class HashEntry<K,V> {
 }
 ```
 
-ConcurrentHashMap 和 HashMap 实现上类似，最主要的差别是 ConcurrentHashMap 采用了分段锁（Segment），每个分段锁维护着几个桶（HashEntry），多个线程可以同时访问不同分段锁上的桶，从而使其并发度更高（并发度就是 Segment 的个数）。
+ConcurrentHashMap 和 HashMap 实现上类似，最主要的差别是 <mark class="hltr-pink">ConcurrentHashMap 采用了分段锁（Segment），每个分段锁维护着几个桶（HashEntry），多个线程可以同时访问不同分段锁上的桶，从而使其并发度更高（并发度就是 Segment 的个数）。</mark>
 
-Segment 继承自 ReentrantLock。
+<mark class="hltr-pink">Segment 继承自 ReentrantLock。</mark>
 
 ```java
 static final class Segment<K,V> extends ReentrantLock implements Serializable {
@@ -861,7 +863,7 @@ transient int count;
 
 在执行 size 操作时，需要遍历所有 Segment 然后把 count 累计起来。
 
-ConcurrentHashMap 在执行 size 操作时先尝试不加锁，如果连续两次不加锁操作得到的结果一致，那么可以认为这个结果是正确的。
+<mark class="hltr-pink">ConcurrentHashMap 在执行 size 操作时先尝试不加锁，如果连续两次不加锁操作得到的结果一致，那么可以认为这个结果是正确的。</mark>
 
 尝试次数使用 RETRIES_BEFORE_LOCK 定义，该值为 2，retries 初始值为 -1，因此尝试次数为 3。
 
@@ -924,7 +926,7 @@ public int size() {
 
 JDK 1.7 使用分段锁机制来实现并发更新操作，核心类为 Segment，它继承自重入锁 ReentrantLock，并发度与 Segment 数量相等。
 
-JDK 1.8 使用了 CAS 操作来支持更高的并发度，在 CAS 操作失败时使用内置锁 synchronized。
+<mark class="hltr-pink">JDK 1.8 使用了 CAS 操作来支持更高的并发度，在 CAS 操作失败时使用内置锁 synchronized。</mark>
 
 并且 JDK 1.8 的实现也在链表过长时会转换为红黑树。
 
@@ -1025,8 +1027,8 @@ protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
 以下是使用 LinkedHashMap 实现的一个 LRU 缓存：
 
 - 设定最大缓存空间 MAX_ENTRIES  为 3；
-- 使用 LinkedHashMap 的构造函数将 accessOrder 设置为 true，开启 LRU 顺序；
-- 覆盖 removeEldestEntry() 方法实现，在节点多于 MAX_ENTRIES 就会将最近最久未使用的数据移除。
+- 使用 LinkedHashMap 的构造函数<mark class="hltr-pink">将 accessOrder 设置为 true，开启 LRU 顺序</mark>；
+- <mark class="hltr-pink">覆盖 removeEldestEntry() 方法实现，在节点多于 MAX_ENTRIES 就会将最近最久未使用的数据移除。</mark>
 
 ```java
 class LRUCache<K, V> extends LinkedHashMap<K, V> {
@@ -1064,7 +1066,7 @@ public static void main(String[] args) {
 
 WeakHashMap 的 Entry 继承自 WeakReference，被 WeakReference 关联的对象在下一次垃圾回收时会被回收。
 
-WeakHashMap 主要用来实现缓存，通过使用 WeakHashMap 来引用缓存对象，由 JVM 对这部分缓存进行回收。
+<mark class="hltr-pink">WeakHashMap 主要用来实现缓存，通过使用 WeakHashMap 来引用缓存对象，由 JVM 对这部分缓存进行回收。</mark>
 
 ```java
 private static class Entry<K,V> extends WeakReference<Object> implements Map.Entry<K,V>
@@ -1072,14 +1074,14 @@ private static class Entry<K,V> extends WeakReference<Object> implements Map.Ent
 
 #### ConcurrentCache
 
-Tomcat 中的 ConcurrentCache 使用了 WeakHashMap 来实现缓存功能。
+<mark class="hltr-pink">Tomcat 中的 ConcurrentCache 使用了 WeakHashMap 来实现缓存功能。</mark>
 
-ConcurrentCache 采取的是分代缓存：
+ConcurrentCache 采取的是<mark class="hltr-pink">分代缓存</mark>：
 
-- 经常使用的对象放入 eden 中，eden 使用 ConcurrentHashMap 实现，不用担心会被回收（伊甸园）；
-- 不常用的对象放入 longterm，longterm 使用 WeakHashMap 实现，这些老对象会被垃圾收集器回收。
-- 当调用  get() 方法时，会先从 eden 区获取，如果没有找到的话再到 longterm 获取，当从 longterm 获取到就把对象放入 eden 中，从而保证经常被访问的节点不容易被回收。
-- 当调用 put() 方法时，如果 eden 的大小超过了 size，那么就将 eden 中的所有对象都放入 longterm 中，利用虚拟机回收掉一部分不经常使用的对象。
+- <mark class="hltr-pink">经常使用的对象放入 eden 中，eden 使用 ConcurrentHashMap 实现，不用担心会被回收</mark>（伊甸园）；
+- <mark class="hltr-pink">不常用的对象放入 longterm，longterm 使用 WeakHashMap 实现，这些老对象会被垃圾收集器回收。</mark>
+- <mark class="hltr-pink">当调用  get() 方法时，会先从 eden 区获取，如果没有找到的话再到 longterm 获取，当从 longterm 获取到就把对象放入 eden 中，从而保证经常被访问的节点不容易被回收。</mark>
+- <mark class="hltr-pink">当调用 put() 方法时，如果 eden 的大小超过了 size，那么就将 eden 中的所有对象都放入 longterm 中，利用虚拟机回收掉一部分不经常使用的对象。</mark>
 
 ```java
 public final class ConcurrentCache<K, V> {

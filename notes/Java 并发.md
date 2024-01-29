@@ -97,7 +97,7 @@ public static void main(String[] args) {
 
 ### 实现 Callable 接口
 
-与 Runnable 相比，Callable 可以有返回值，返回值通过 FutureTask 进行封装。
+与 Runnable 相比，Callable 可以有返回值，<mark class="hltr-pink">返回值通过 FutureTask 进行封装</mark>。
 
 ```java
 public class MyCallable implements Callable<Integer> {
@@ -216,7 +216,7 @@ public void run() {
 
 ### InterruptedException
 
-通过调用一个线程的 interrupt() 来中断该线程，如果该线程处于阻塞、限期等待或者无限期等待状态，那么就会抛出 InterruptedException，从而提前结束该线程。但是不能中断 I/O 阻塞和 synchronized 锁阻塞。
+<mark class="hltr-pink">通过调用一个线程的 interrupt() 来中断该线程，如果该线程处于阻塞、限期等待或者无限期等待状态，那么就会抛出 InterruptedException，从而提前结束该线程。但是不能中断 I/O 阻塞和 synchronized 锁阻塞。</mark>
 
 对于以下代码，在 main() 中启动一个线程之后再中断它，由于线程中调用了 Thread.sleep() 方法，因此会抛出一个 InterruptedException，从而提前结束线程，不执行之后的语句。
 
@@ -259,7 +259,7 @@ java.lang.InterruptedException: sleep interrupted
 
 如果一个线程的 run() 方法执行一个无限循环，并且没有执行 sleep() 等会抛出 InterruptedException 的操作，那么调用线程的 interrupt() 方法就无法使线程提前结束。
 
-但是调用 interrupt() 方法会设置线程的中断标记，此时调用 interrupted() 方法会返回 true。因此可以在循环体中使用 interrupted() 方法来判断线程是否处于中断状态，从而提前结束线程。
+<mark class="hltr-pink">但是调用 interrupt() 方法会设置线程的中断标记，此时调用 interrupted() 方法会返回 true。</mark>因此可以在循环体中使用 interrupted() 方法来判断线程是否处于中断状态，从而提前结束线程。
 
 ```java
 public class InterruptExample {
@@ -321,7 +321,7 @@ java.lang.InterruptedException: sleep interrupted
     at java.lang.Thread.run(Thread.java:745)
 ```
 
-如果只想中断 Executor 中的一个线程，可以通过使用 submit() 方法来提交一个线程，它会返回一个 Future\<?\> 对象，通过调用该对象的 cancel(true) 方法就可以中断线程。
+<mark class="hltr-pink">如果只想中断 Executor 中的一个线程，可以通过使用 submit() 方法来提交一个线程，它会返回一个 Future\<?\> 对象，通过调用该对象的 cancel(true) 方法就可以中断线程。</mark>
 
 ```java
 Future<?> future = executorService.submit(() -> {
@@ -586,7 +586,7 @@ B
 
 只能用在同步方法或者同步控制块中使用，否则会在运行时抛出 IllegalMonitorStateException。
 
-使用 wait() 挂起期间，线程会释放锁。这是因为，如果没有释放锁，那么其它线程就无法进入对象的同步方法或者同步控制块中，那么就无法执行 notify() 或者 notifyAll() 来唤醒挂起的线程，造成死锁。
+<mark class="hltr-pink">使用 wait() 挂起期间，线程会释放锁。这是因为，如果没有释放锁，那么其它线程就无法进入对象的同步方法或者同步控制块中，那么就无法执行 notify() 或者 notifyAll() 来唤醒挂起的线程，造成死锁。</mark>
 
 ```java
 public class WaitNotifyExample {
@@ -766,9 +766,9 @@ run..run..run..run..run..run..run..run..run..run..end
 
 用来控制多个线程互相等待，只有当多个线程都到达时，这些线程才会继续执行。
 
-和 CountdownLatch 相似，都是通过维护计数器来实现的。线程执行 await() 方法之后计数器会减 1，并进行等待，直到计数器为 0，所有调用 await() 方法而在等待的线程才能继续执行。
+和 CountDownLatch 相似，都是通过维护计数器来实现的。线程执行 await() 方法之后计数器会减 1，并进行等待，直到计数器为 0，所有调用 await() 方法而在等待的线程才能继续执行。
 
-CyclicBarrier 和 CountdownLatch 的一个区别是，CyclicBarrier 的计数器通过调用 reset() 方法可以循环使用，所以它才叫做循环屏障。
+CyclicBarrier 和 CountDownLatch 的一个区别是，CyclicBarrier 的计数器通过调用 reset() 方法可以循环使用，所以它才叫做循环屏障。
 
 CyclicBarrier 有两个构造函数，其中 parties 指示计数器的初始值，barrierAction 在所有线程都到达屏障的时候会执行一次。
 
@@ -1020,7 +1020,7 @@ ForkJoin 使用 ForkJoinPool 来启动，它是一个特殊的线程池，线程
 public class ForkJoinPool extends AbstractExecutorService
 ```
 
-ForkJoinPool 实现了工作窃取算法来提高 CPU 的利用率。每个线程都维护了一个双端队列，用来存储需要执行的任务。工作窃取算法允许空闲的线程从其它线程的双端队列中窃取一个任务来执行。窃取的任务必须是最晚的任务，避免和队列所属线程发生竞争。例如下图中，Thread2 从 Thread1 的队列中拿出最晚的 Task1 任务，Thread1 会拿出 Task2 来执行，这样就避免发生竞争。但是如果队列中只有一个任务时还是会发生竞争。
+<mark class="hltr-pink">ForkJoinPool 实现了工作窃取算法来提高 CPU 的利用率。每个线程都维护了一个双端队列，用来存储需要执行的任务。工作窃取算法允许空闲的线程从其它线程的双端队列中窃取一个任务来执行。窃取的任务必须是最晚的任务，避免和队列所属线程发生竞争。</mark>例如下图中，Thread2 从 Thread1 的队列中拿出最晚的 Task1 任务，Thread1 会拿出 Task2 来执行，这样就避免发生竞争。但是如果队列中只有一个任务时还是会发生竞争。
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/e42f188f-f4a9-4e6f-88fc-45f4682072fb.png" width="300px"> </div><br>
 
@@ -1079,9 +1079,9 @@ Java 内存模型试图屏蔽各种硬件和操作系统的内存访问差异，
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/942ca0d2-9d5c-45a4-89cb-5fd89b61913f.png" width="600px"> </div><br>
 
-所有的变量都存储在主内存中，每个线程还有自己的工作内存，工作内存存储在高速缓存或者寄存器中，保存了该线程使用的变量的主内存副本拷贝。
+<mark class="hltr-pink">所有的变量都存储在主内存中，每个线程还有自己的工作内存，工作内存存储在高速缓存或者寄存器中，保存了该线程使用的变量的主内存副本拷贝。</mark>
 
-线程只能直接操作工作内存中的变量，不同线程之间的变量值传递需要通过主内存来完成。
+<mark class="hltr-pink">线程只能直接操作工作内存中的变量，不同线程之间的变量值传递需要通过主内存来完成。</mark>
 
 <div align="center"> <img src="https://cs-notes-1256109796.cos.ap-guangzhou.myqcloud.com/15851555-5abc-497d-ad34-efed10f43a6b.png" width="600px"> </div><br>
 
